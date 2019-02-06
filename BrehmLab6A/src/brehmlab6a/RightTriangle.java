@@ -14,8 +14,10 @@ public class RightTriangle extends Shape {
     double base = 3;
     double height = 4;
     
-    public RightTriangle(String desc) {
+    public RightTriangle(String desc, double base, double height) {
         super(desc);
+        this.base = base;
+        this.height = height;
     }
     
     public double getArea() {

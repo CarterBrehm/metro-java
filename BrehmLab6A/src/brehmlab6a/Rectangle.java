@@ -14,8 +14,10 @@ public class Rectangle extends Shape {
     double width = 3;
     double height = 4;
     
-    public Rectangle(String desc) {
+    public Rectangle(String desc, double width, double height) {
         super(desc);
+        this.width = width;
+        this.height = height;
     }
     
     public double getArea() {

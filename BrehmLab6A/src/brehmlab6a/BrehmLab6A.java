@@ -12,9 +12,9 @@ package brehmlab6a;
 public class BrehmLab6A {
 
     public static void main(String[] args) {
-        Circle c = new Circle("Circle");
-        RightTriangle t = new RightTriangle("Right Triangle");
-        Rectangle r = new Rectangle("Rectangle");
+        Circle c = new Circle("Circle", 6);
+        RightTriangle t = new RightTriangle("Right Triangle", 7, 3);
+        Rectangle r = new Rectangle("Rectangle", 13, 5);
         
         System.out.println(c);
         System.out.println();
