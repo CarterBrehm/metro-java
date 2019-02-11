@@ -25,15 +25,15 @@ public class WriteCN
                     }
                 }
                 catch (IOException e) {
-                    System.out.println("Couldn't write to the file! Error:");
-                    System.out.println(e);
+                    System.err.println("Couldn't write to the file! Error:");
+                    System.err.println(e);
                 }
                 finally {
                     if(bw != null) try {
                         bw.close();
                     } catch (IOException ex) {
-                        System.out.println("Couldn't close the file! Error:");
-                        System.out.println(ex);
+                        System.err.println("Couldn't close the file! Error:");
+                        System.err.println(ex);
                     }
                 }
 	}
