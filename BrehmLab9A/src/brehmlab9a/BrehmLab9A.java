@@ -74,7 +74,7 @@ public class BrehmLab9A {
                             if (breader != null) {
                                 breader.close();
                             }
-                        } catch (IOException ioe) {
+                        } catch (IOException ioeÏ) {
                         }
                     }
                 } else {
