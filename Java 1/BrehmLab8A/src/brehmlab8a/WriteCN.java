@@ -21,7 +21,7 @@ public class WriteCN
 
                     for(int i = 0; i < textArray.length; i++){
                             bw.write(textArray[i]);
-                            bw.newLine();
+                            bw.newLine();   
                     }
                 }
                 catch (IOException e) {
