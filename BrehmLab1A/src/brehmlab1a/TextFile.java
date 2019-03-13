@@ -59,20 +59,20 @@ public class TextFile {
     }
 
     public static void append(String text, String filepath) {
-        BufferedWriter bw2 = null;
-        File f2 = new File("test.txt");
+        BufferedWriter bw = null;
+        File f = new File("test.txt");
         try {
-            f2.createNewFile();
+            f.createNewFile();
 
-            bw2 = new BufferedWriter(new FileWriter(f2, true));
-            bw2.append(text);
+            bw = new BufferedWriter(new FileWriter(f, true));
+            bw.append(text);
 
         } catch (IOException e) {
-            System.err.println("Error! Couldn't write to the file!\n" + e);
+            System.err.println("Error! Couldn't append to the file!\n" + e);
         } finally {
-            if (bw2 != null) {
+            if (bw != null) {
                 try {
-                    bw2.close();
+                    bw.close();
                 } catch (IOException e) {
                     System.err.println("Error! Couldn't close the file!\n" + e);
                 }

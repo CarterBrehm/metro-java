@@ -32,7 +32,7 @@ public class BrehmLab1A {
         System.out.println("| APPENDING TO FILE| ");
         System.out.println();
         System.out.print("Please enter some text to append: ");
-        TextFile.write(scanner.nextLine(), "test.txt");
+        TextFile.append(scanner.nextLine(), "test.txt");
         System.out.println();
         System.out.println("| END APPEND |");
     }
