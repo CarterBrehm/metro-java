@@ -67,9 +67,8 @@ public class Phonebook {
     public void saveMap() {
         try {
             File f = new File("phonebook.ser");
-            try (ObjectOutputStream objectStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)))) {
-                objectStream.writeObject(hm);
-            }
+            ObjectOutputStream objectStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)));
+            objectStream.writeObject(hm);
             System.out.println("Phonebook has been saved to phonebook.ser in the project directory.");
         } catch (IOException e) {
             System.err.println("Error! Couldn't save the hashmap to disk. Check permissions or available disk space.");
