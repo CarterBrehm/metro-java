@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,25 +35,32 @@ public class BrehmLab2A {
     }
 
     public static void saveMap(Map hm) {
+        File f = new File("phonebook.ser");
+        ObjectOutputStream objectStream = null;
         try {
-            File f = new File("phonebook.ser");
-            ObjectOutputStream objectStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)));
+            objectStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(f)));
             objectStream.writeObject(hm);
-            objectStream.close();
             System.out.println("Phonebook has been saved to phonebook.ser in the project directory.");
         } catch (IOException e) {
             System.err.println("Error! Couldn't save the hashmap to disk. Check permissions or available disk space.");
             System.err.println(e);
+        } finally {
+            try {
+                objectStream.close();
+            } catch (IOException e) {
+                System.err.println("Error! Couldn't close the file!");
+                System.err.println(e);
+            }
         }
     }
 
     public static HashMap readMap() {
         HashMap hm = null;
+        File f = new File("phonebook.ser");
+        ObjectInputStream objectStream = null;
         try {
-            File f = new File("phonebook.ser");
-            ObjectInputStream objectStream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)));
+            objectStream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)));
             hm = (HashMap) objectStream.readObject();
-            objectStream.close();
             System.out.println("Phonebook has been read from phonebook.ser in the project directory.");
         } catch (IOException e) {
             System.err.println("Error! Couldn't save the hashmap to disk. Check permissions.");
@@ -59,6 +68,13 @@ public class BrehmLab2A {
         } catch (ClassNotFoundException e) {
             System.err.println("Error! Couldn't find a class in the file!");
             System.err.println(e);
+        } finally {
+            try {
+                objectStream.close();
+            } catch (IOException e) {
+                System.err.println("Error! Couldn't close the file!");
+                System.err.println(e);
+            }
         }
         return hm;
     }
