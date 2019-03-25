@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<library>
+	<section>
+	<description>Web Development: XML</description>
+	<book type="non-fiction">
+		<title>Learning XML</title>
+		<author>Eric T. Ray</author>
+		<price>34.95</price>
+	</book>
+	<book type="non-fiction">
+		<title>XML in a Nutshell</title>
+		<author>Elliote Rusty Harold</author>
+		<author>W. Scott Means</author>
+		<price>29.95</price>
+	</book>
+	</section>	
+</library>
