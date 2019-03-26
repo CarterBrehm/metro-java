@@ -8,6 +8,7 @@ public class BrehmLab3B {
 
     public static void main(String[] args) {
         try {
+            // make a handler to pass to the SAXparser with our new KeyDataHandler class
             KeyDataHandler handler = new KeyDataHandler();
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
