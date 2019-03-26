@@ -13,7 +13,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author carter
  */
 public class KeyDataHandler extends DefaultHandler {
-
+    
+    // the StringBuffer is just something to cache our data in without printing it right to console
     private StringBuffer sb = new StringBuffer();
     private boolean readStatus;
     private boolean lineBreakStatus;
@@ -46,7 +47,9 @@ public class KeyDataHandler extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
+        // stop reading...
         readStatus = false;
+        // then, if there's a line break flagged to be added after this element, add one and undo the flag
         if (lineBreakStatus == true) {
             sb.append("\n");
             lineBreakStatus = false;
@@ -54,12 +57,15 @@ public class KeyDataHandler extends DefaultHandler {
     }
 
     public void characters(char buf[], int offset, int len) throws SAXException {
+        // if we've told the parser that we want this information
         if (readStatus) {
+            // write the charaters (buf), starting at the (offset) with a length of (len)
             sb.append(buf, offset, len);
         }
     }
 
     public void endDocument() throws SAXException {
+        //finally, print the buffer we've been adding to this entire time
         System.out.println(sb);
     }
 
