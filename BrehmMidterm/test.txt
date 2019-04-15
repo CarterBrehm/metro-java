@@ -1,0 +1,8 @@
+testing
+testing
+newlines
+are
+respected
+even blank ones
+
+like this
