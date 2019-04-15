@@ -106,7 +106,7 @@ public class Editor extends javax.swing.JFrame {
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        TextFile.write(textBox.getText(), fileName.getText());
+        textBox.setText(TextFile.write(textBox.getText(), fileName.getText()));
     }//GEN-LAST:event_saveButtonActionPerformed
 
     /**

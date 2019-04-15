@@ -36,7 +36,8 @@ public class TextFile {
         return contents;
     }
 
-    public static void write(String text, String filepath) {
+    public static String write(String text, String filepath) {
+        String contents = "";
         BufferedWriter bw = null;
         File f = new File("test.txt");
         try {
@@ -46,15 +47,16 @@ public class TextFile {
             bw.write(text);
 
         } catch (IOException e) {
-            System.err.println("Error! Couldn't write to the file!\n" + e);
+            contents = "Error! Couldn't write to the file!\n" + e;
         } finally {
             if (bw != null) {
                 try {
                     bw.close();
                 } catch (IOException e) {
-                    System.err.println("Error! Couldn't close the file!\n" + e);
+                    contents = "Error! Couldn't close the file!\n" + e;
                 }
             }
         }
+        return contents;
     }
 }
