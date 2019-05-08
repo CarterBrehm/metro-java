@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +22,22 @@ import java.util.logging.Logger;
  * @author crbrehm
  */
 public class BrehmLab8A {
-    
+
+    public static void insertRecord(ArrayList record, Connection dbCon) {
+        try {
+            PreparedStatement ps = dbCon.prepareStatement("INSERT INTO CONTRACTORS (ID, COMPANYNAME, PHONE, CONTACTNAME, RATING, OUTOFSTATESERVICE) VALUES(?,?,?,?,?,?)");
+            ps.setInt(1, (int) record.get(0));
+            ps.setString(2, (String) record.get(1));
+            ps.setString(3, (String) record.get(2));
+            ps.setString(4, (String) record.get(3));
+            ps.setInt(5, Integer.parseInt((String) record.get(4)));
+            ps.setBoolean(6, (boolean) Boolean.parseBoolean((String) record.get(5)));
+            ps.execute();
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+    }
+
     public static int findID(ResultSet result) {
         int highestID = -1;
         try {
@@ -37,14 +51,15 @@ public class BrehmLab8A {
         }
         return highestID;
     }
-    
+
     public static void addRecord(ResultSet result, Connection dbCon) {
         Scanner sc = new Scanner(System.in);
         ArrayList record = new ArrayList();
         try {
             System.out.println("NEW RECORD:");
-            System.out.println("ID: " + (findID(result) + 1));
-            record.add(findID(result) + 1);
+            int lastID = (findID(result) + 1);
+            System.out.println("ID: " + lastID);
+            record.add(lastID);
             ResultSetMetaData metadata = result.getMetaData();
             for (int i = 2; i <= metadata.getColumnCount(); i++) {
                 String input = null;
@@ -55,27 +70,30 @@ public class BrehmLab8A {
                 } while (input.isEmpty());
                 input = null;
             }
-            PreparedStatement ps = dbCon.prepareStatement("INSERT INTO CONTRACTORS (ID, COMPANYNAME, PHONE, CONTACTNAME, RATING, OUTOFSTATESERVICE) VALUES(?,?,?,?,?,?)");
-            System.out.println(record);
-            ps.setInt(1, (int) record.get(0));
-            ps.setString(2, (String) record.get(1));
-            ps.setString(3, (String) record.get(2));
-            ps.setString(4, (String) record.get(3));
-            ps.setInt(5, (int) record.get(4));
-            ps.setBoolean(6, (boolean) Boolean.parseBoolean((String) record.get(5)));
+
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
+
+        insertRecord(record, dbCon);
+    }
+
+    public static void delRecord(ResultSet result, Connection dbCon) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the ID of the row you'd like to delete: ");
+        int index = sc.nextInt();
+        try {
+            PreparedStatement ps = dbCon.prepareStatement("DELETE FROM CONTRACTORS WHERE ID = ?");
+            ps.setInt(1, (int) index);
             ps.execute();
-            
+            System.out.println("Row deleted.");
         } catch (SQLException ex) {
             System.err.println(ex);
         }
     }
-    
-    public static void delRecord(ResultSet result, int index) {
-        
-    }
 
     public static String getData(ResultSet result) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("");
         Scanner sc = new Scanner(System.in);
         try {
             ResultSetMetaData metadata = result.getMetaData();
@@ -89,14 +107,14 @@ public class BrehmLab8A {
             String selector = sc.nextLine();
             System.out.println();
 
-            if (!result.next()) {
-                sb.append("NO DATA FOUND FOR " + selector);
-            } else {
-                while (result.next()) {
-                    sb.append(result.getString(selector) + "\n");
-                }
+            while (result.next()) {
+                sb.append(result.getString(selector) + "\n");
             }
+
+            Thread.sleep(1000);
         } catch (SQLException ex) {
+            System.err.println(ex);
+        } catch (InterruptedException ex) {
             System.err.println(ex);
         }
         return sb.toString();
@@ -121,7 +139,7 @@ public class BrehmLab8A {
             }
             sb.append("\n");
             while (result.next()) {
-                for (int i = 1; i < 7; i++) {
+                for (int i = 1; i <= metadata.getColumnCount(); i++) {
                     sb.append(pad(result.getString(i), 25));
                     sb.append(" | ");
                 }
@@ -136,30 +154,29 @@ public class BrehmLab8A {
     public static int menu() {
         Scanner sc = new Scanner(System.in);
         int choice = 0;
-        while (choice < 1 || choice > 4) {
+        while (choice < 1 || choice > 5) {
             System.out.println();
             System.out.println("Choose an option:");
             System.out.println("[1] Dump the contents of the database to console");
             System.out.println("[2] Get specific column of data");
             System.out.println("[3] Add a record");
             System.out.println("[4] Delete a record");
-            System.out.println("Enter anything else to quit.");
+            System.out.println("[5] Quit");
             choice = sc.nextInt();
         }
         return choice;
     }
 
     public static void main(String[] args) {
-        ResultSet result = null;
         Connection dbCon = null;
+        Statement statement = null;
         boolean exit = false;
         boolean connected = false;
         try {
             Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
             String myDb = "jdbc:derby://localhost:1527/Lab8A";
             dbCon = DriverManager.getConnection(myDb, "nbuser", "nbuser");
-            Statement statement = dbCon.createStatement();
-            result = statement.executeQuery("SELECT * from Contractors");
+            statement = dbCon.createStatement();
             connected = true;
         } catch (ClassNotFoundException | SQLException exc) {
             System.err.println(exc);
@@ -170,15 +187,44 @@ public class BrehmLab8A {
             switch (menu()) {
                 case 1:
                     System.out.println();
-                    System.out.print(listAll(result));
+                    ResultSet result = null;
+                    try {
+                        result = statement.executeQuery("SELECT * from Contractors");
+                        System.out.print(listAll(result));
+                    } catch (SQLException ex) {
+                        System.err.println(ex);
+                    }
                     break;
                 case 2:
                     System.out.println();
-                    System.out.println(getData(result));
+                    ResultSet result2 = null;
+                    try {
+                        result2 = statement.executeQuery("SELECT * from Contractors");
+                        System.out.println(getData(result2));
+                    } catch (SQLException ex) {
+                        System.err.println(ex);
+                    }
                     break;
                 case 3:
                     System.out.println();
-                    addRecord(result, dbCon);
+                    ResultSet result3 = null;
+                    try {
+                        result3 = statement.executeQuery("SELECT * from Contractors");
+                        addRecord(result3, dbCon);
+                    } catch (SQLException ex) {
+                        System.err.println(ex);
+                    }
+                    break;
+                case 4:
+                    System.out.println();
+                    ResultSet result4 = null;
+                    try {
+                        result4 = statement.executeQuery("SELECT * from Contractors");
+                        delRecord(result4, dbCon);
+                    } catch (SQLException ex) {
+                        System.err.println(ex);
+                    }
+                    break;
                 default:
                     exit = true;
                     break;
